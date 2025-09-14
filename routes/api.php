@@ -2,29 +2,36 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Models\Berita; // Import Model Berita
+use App\Http\Controllers\BeritaController; // Pastikan controller di-import
 
 /*
 |--------------------------------------------------------------------------
 | API Routes
 |--------------------------------------------------------------------------
 |
-| Here is where you can register API routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "api" middleware group. Make something great!
+| Di sini Anda mendaftarkan rute API untuk aplikasi Anda. Rute-rute ini
+| dimuat oleh RouteServiceProvider dan semuanya akan
+| ditugaskan ke grup middleware "api".
 |
 */
 
+// Rute untuk otentikasi (biarkan seperti ini)
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-// Ini adalah endpoint API untuk mengambil semua berita
-Route::get('/berita', function () {
-    return Berita::all(); // Mengambil semua data dari tabel berita
+// --- LANGKAH DIAGNOSA: TAMBAHKAN RUTE INI UNTUK TES ---
+// Rute ini hanya untuk memastikan file ini dibaca oleh server.
+Route::get('/test', function () {
+    return response()->json(['pesan' => 'Rute Tes Berhasil!']);
 });
 
-// Ini adalah endpoint API untuk mengambil satu berita berdasarkan ID
-Route::get('/berita/{id}', function ($id) {
-    return Berita::find($id); // Mengambil data berita berdasarkan ID
-});
+
+// --- INI SATU-SATUNYA BARIS YANG ANDA BUTUHKAN UNTUK BERITA ---
+// Baris ini secara otomatis membuat semua rute CRUD:
+// GET /api/berita         (untuk menampilkan semua berita)
+// GET /api/berita/{id}    (untuk menampilkan satu berita)
+// POST /api/berita        (untuk membuat berita baru)
+// PUT/PATCH /api/berita/{id} (untuk mengedit berita)
+// DELETE /api/berita/{id} (untuk menghapus berita)
+Route::apiResource('berita', BeritaController::class);
